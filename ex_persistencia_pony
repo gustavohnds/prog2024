@@ -1,0 +1,23 @@
+#modelo simples de persistência usando a biblioteca pony
+
+from pony.orm import *
+
+#conectando-se ao pony
+db = Database()
+
+class Carro(db.Entity):
+    modelo = Required(str)
+    cor = Required(str)
+    placa = Required(str)
+    ano = Required(int)
+
+#especificando o BD; o BD será criado caso não exista
+db.bind(provider='sqlite', filename='carro.db', create_db=True)
+
+db.generate_mapping(create_tables=True)
+
+# iniciando a sessão
+with db_session:
+    c1 = Carro(modelo='Jeep Renegade', cor='Branco', placa='AUW7I85', ano='2017')
+    commit()
+    print(c1.modelo,c1.cor,c1.placa,c1.ano)
